@@ -40,8 +40,11 @@ export function effectiveField(key:string, overrides?:Record<string,FieldSetting
  const next=overrides?.[key];
  return {en:next?.en || orig.en,np:next?.np || orig.np,required:orig.locked?true:next?.required??orig.required,enabled:orig.locked?true:next?.enabled??true,options:next?.options??orig.options};
 }
+// Account details were supplied by the owner through their reference screenshots.
+// There is deliberately NO built-in QR; only an image uploaded by an authenticated
+// administrator to siteAssets/{esewaQrImage,khaltiQrImage,bankQrImage} is displayed.
 export const defaultPaymentOptions:Record<string,PaymentOption>={
- esewa:{enabled:false,name:'Married Nepal Pvt. Ltd.',account:'',branch:'',instructionsEn:'Verify the recipient before sending money.',instructionsNp:'पैसा पठाउनुअघि प्राप्तकर्ता पुष्टि गर्नुहोस्।'},
- khalti:{enabled:false,name:'Married Nepal Pvt. Ltd.',account:'',branch:'',instructionsEn:'Verify the recipient before sending money.',instructionsNp:'पैसा पठाउनुअघि प्राप्तकर्ता पुष्टि गर्नुहोस्।'},
- bank:{enabled:false,name:'Married Nepal Pvt. Ltd.',account:'',branch:'',instructionsEn:'Verify the account details before sending money.',instructionsNp:'बैंक खाता विवरण पुष्टि गर्नुहोस्।'}
+ esewa:{enabled:true,name:'Married Nepal Pvt. Ltd.',account:'9801234567',branch:'',instructionsEn:'Check the recipient name before transferring. Keep your transaction receipt for review.',instructionsNp:'रकम पठाउनु अघि खातावालाको नाम जाँच्नुहोस्। भुक्तानी रसिद सुरक्षित राख्नुहोस्।'},
+ khalti:{enabled:true,name:'Married Nepal Pvt. Ltd.',account:'9801234567',branch:'',instructionsEn:'Check the recipient name before transferring. Keep your transaction receipt for review.',instructionsNp:'रकम पठाउनु अघि खातावालाको नाम जाँच्नुहोस्। भुक्तानी रसिद सुरक्षित राख्नुहोस्।'},
+ bank:{enabled:true,name:'Married Nepal Pvt. Ltd.',account:'01201017500123',branch:'Nabil Bank Ltd. · New Baneshwor, Kathmandu',instructionsEn:'Transfer only after confirming the beneficiary and save the payment voucher.',instructionsNp:'लाभग्राही पुष्टि गरेपछि मात्र रकम पठाउनुहोस् र भुक्तानी भौचर सुरक्षित राख्नुहोस्।'}
 };

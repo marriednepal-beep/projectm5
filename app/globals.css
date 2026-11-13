@@ -315,3 +315,56 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 /* Fix old navigation variants which highlighted a link gold but inherited pale text. */
 .nav-links a.active:not(.nav-register){background:transparent!important;color:var(--maroon)!important;text-shadow:none!important}
 .nav-links a:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+
+
+/* V8.3 — readable full navigation without changing the established hero typography. */
+.elegant-header.site-header{background:var(--maroon)!important;border-bottom:2px solid var(--gold)!important;box-shadow:0 5px 16px rgba(37,5,17,.10)!important}
+.elegant-header .nav-row{max-width:1510px;width:100%;padding-inline:23px;gap:16px}
+.elegant-header .brand-words strong,.elegant-header .brand-words strong span{color:#fff4e7!important}
+.elegant-header .brand-words small{color:#f1d6af!important}
+.elegant-header .nav-links{gap:5px;justify-content:center}
+.elegant-header .nav-links a,.elegant-header .nav-links a:visited,.site-header .nav-links a{color:#fffaf2!important;padding:10px 12px;font-size:11px;line-height:1.25;border-radius:24px;transition:background .15s ease,color .15s ease}
+.elegant-header .nav-links a:hover,.elegant-header .nav-links a:focus-visible{background:#7a2947!important;color:#fff!important}
+.elegant-header .nav-links a.active,.site-header .nav-links a.active{background:#f3dfb2!important;color:#50162e!important;font-weight:800!important}
+.elegant-header .nav-links a.active:after{display:none!important}
+.elegant-header .language{background:#4a122b;border-color:#8c5367}
+.elegant-header .language button{color:#fff3df}
+.elegant-header .language button.selected{background:var(--gold);color:#25121d}
+.elegant-header .nav-register,.site-header .nav-register{background:#f5e2bb!important;color:#541b31!important;border-color:#f5e2bb!important;white-space:nowrap}
+.elegant-header .nav-register:hover{background:#fff1d6!important;color:#541b31!important}
+.elegant-header .mobile-toggle{background:#fffaf4;color:var(--maroon);border:1px solid #edddbd}
+/* Consent remains a compact, accessible checkbox even inside generic field wrappers. */
+.registration-card .checkline{display:flex!important;flex-direction:row!important;align-items:flex-start!important;gap:12px!important;width:100%;max-width:100%;margin:16px 0;line-height:1.55}
+.registration-card .checkline input[type="checkbox"]{appearance:auto!important;display:block!important;position:static!important;width:18px!important;min-width:18px!important;max-width:18px!important;height:18px!important;min-height:18px!important;max-height:18px!important;flex:0 0 18px!important;padding:0!important;margin:2px 0 0!important;accent-color:var(--maroon);border-radius:3px}
+.registration-card .checkline>span{display:block!important;flex:1 1 0!important;min-width:0!important;max-width:100%!important;overflow-wrap:break-word;white-space:normal;color:#453a3a!important;font-size:12px!important;font-weight:450!important;text-align:left}
+.registration-card .checkline a{color:var(--maroon)}
+/* Payment method buttons stay usable; no unverified receiving accounts or mock QR codes. */
+.registration-card .payment-method-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.registration-card .payment-method-tabs button{display:flex;min-height:52px;justify-content:center;font-size:13px;border-radius:9px;background:#fff;color:#5e3344;border:1px solid #ddd7d2;font-weight:750}
+.registration-card .payment-method-tabs button.chosen{color:var(--maroon);background:#fdf1d8;outline:0;border:2px solid var(--gold);box-shadow:none}
+.payment-confirmation-prompt{display:flex;gap:16px;padding:24px;background:#fffbf2;border:1px solid #e4cb8c;border-radius:8px;margin:0 0 18px;color:#553847}
+.payment-confirmation-prompt>svg{color:var(--gold);flex-shrink:0;margin-top:3px}
+.payment-confirmation-prompt strong{font-size:14px;color:var(--maroon)}
+.payment-confirmation-prompt p{font-size:12px;line-height:1.75;margin:8px 0;color:#5b5451}
+.payment-contact-link{display:inline-flex;padding:10px 14px;border:1px solid var(--maroon);border-radius:3px;color:var(--maroon);font-weight:750;font-size:12px;text-decoration:none}
+.payment-contact-link:hover{background:#f2e9e0}
+.payment-status-note{color:#786d64;font-size:11px;line-height:1.6;margin:12px 0}
+@media(max-width:1350px){.elegant-header .nav-links{display:none;position:absolute;top:77px;left:0;right:0;background:var(--maroon);border-top:1px solid #8a4b61;padding:16px 24px 22px;box-shadow:0 18px 25px #3a101b20;z-index:30}
+ .elegant-header .nav-links.mobile-open{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+ .elegant-header .nav-links.mobile-open a{padding:12px 16px;border-bottom:0;font-size:13px;color:#fffaf2!important}
+ .elegant-header .nav-links.mobile-open a.active{color:#50162e!important}
+ .elegant-header .mobile-toggle{display:flex}
+ .elegant-header .nav-actions{margin-left:auto}
+}
+@media(max-width:680px){.elegant-header .nav-links{top:72px}
+ .registration-card .payment-method-tabs{gap:7px}
+ .registration-card .payment-method-tabs button{padding:12px 5px;font-size:11px;min-height:48px}
+ .payment-confirmation-prompt{padding:15px;gap:10px}
+ .registration-card .checkline>span{font-size:12px!important}
+}
+
+/* Admin payment QR controls (V8.3) */
+.payment-qr-admin{display:flex;justify-content:space-between;gap:20px;align-items:center;background:#fffaf1;border:1px solid #e8d8ba;border-radius:8px;margin:15px 0 4px;padding:14px 18px}
+.payment-qr-admin>div:first-child{max-width:360px}.payment-qr-admin b{color:#671c38}.payment-qr-admin p{font-size:12px;margin:5px 0;line-height:1.55}
+.payment-qr-admin-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.payment-qr-admin-preview{display:block;width:108px;height:108px;object-fit:contain;border:1px solid #ead8bc;border-radius:7px;background:white}.payment-qr-admin-empty{width:108px;min-height:66px;display:grid;place-items:center;text-align:center;color:#75645a;border:1px dashed #cebaa0;padding:8px;font-size:11px}
+@media(max-width:720px){.payment-qr-admin{flex-direction:column;align-items:flex-start}.payment-qr-admin-controls{width:100%}}

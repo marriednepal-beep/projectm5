@@ -4,11 +4,11 @@ import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
 const config = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyB-P6GWyT-JU6UAKkRAazzVoIzcfNs91_g",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "marriednepal-282f5.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "marriednepal-282f5",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:629216705507:web:103dd25c806dd44ff6fed6",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "629216705507"
 };
 export const isConfigured = !!(config.apiKey && config.authDomain && config.projectId && config.appId);
 let firebaseApp: FirebaseApp | null = null;
@@ -20,10 +20,10 @@ if (isConfigured && typeof window !== "undefined") {
   db = getFirestore(firebaseApp);
 }
 export function requireDb(): Firestore {
-  if (!db) throw new Error("Firebase is not configured. Add NEXT_PUBLIC_FIREBASE_* variables in Vercel Project Settings.");
+  if (!db) throw new Error("Online registration is temporarily unavailable. Please contact our office.");
   return db;
 }
 export function requireAuth(): Auth {
-  if (!auth) throw new Error("Firebase Authentication is not configured.");
+  if (!auth) throw new Error("Secure access is temporarily unavailable. Please try again or contact our office.");
   return auth;
 }
