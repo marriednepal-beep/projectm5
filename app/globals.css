@@ -368,3 +368,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .payment-qr-admin>div:first-child{max-width:360px}.payment-qr-admin b{color:#671c38}.payment-qr-admin p{font-size:12px;margin:5px 0;line-height:1.55}
 .payment-qr-admin-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.payment-qr-admin-preview{display:block;width:108px;height:108px;object-fit:contain;border:1px solid #ead8bc;border-radius:7px;background:white}.payment-qr-admin-empty{width:108px;min-height:66px;display:grid;place-items:center;text-align:center;color:#75645a;border:1px dashed #cebaa0;padding:8px;font-size:11px}
 @media(max-width:720px){.payment-qr-admin{flex-direction:column;align-items:flex-start}.payment-qr-admin-controls{width:100%}}
+
+/* Official Married Nepal logo: the supplied circular gold emblem replaces the tree/star mark.
+   Keep all original site typography, palette and page layouts unchanged. */
+.elegant-identity .brand-crest{width:53px!important;height:53px!important;aspect-ratio:1;object-fit:contain!important;border-radius:50%!important;border:1px solid rgba(196,154,69,.58)!important;background:#0a0608;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.05)}
+.footer .elegant-identity .brand-crest{width:57px!important;height:57px!important}
+.search-brand-logo{width:50px!important;height:50px!important;display:inline-grid!important;place-items:center;line-height:1!important;flex:none}
+.search-brand-logo img{display:block!important;width:48px!important;height:48px!important;object-fit:contain!important;border-radius:50%!important;background:#0a0608}
+.decorative-rule b{font-family:'DM Sans',sans-serif!important;font-size:20px!important;font-weight:500!important;line-height:1!important;color:#b68d55!important}
+@media(max-width:650px){.elegant-identity .brand-crest{width:44px!important;height:44px!important}.footer .elegant-identity .brand-crest{width:50px!important;height:50px!important}.search-brand-logo{width:42px!important;height:42px!important}.search-brand-logo img{width:40px!important;height:40px!important}}

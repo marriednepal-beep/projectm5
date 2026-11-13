@@ -10,8 +10,8 @@ import {defaultOffice} from "@/lib/cms";
 function Logo({light=false}:{light?:boolean}){
  const {site}=useApp();
  return <span className={`identity elegant-identity ${light?"identity-light":""}`}>
-  <img className="brand-crest" src={site.logoImage||"/images/married-nepal-outline.svg"} alt="Married Nepal emblem" />
-  <span className="brand-words"><strong>Married <span>Nepal</span></strong><small>PRIVATE LIMITED <i>✦</i> EST. IN NEPAL</small></span>
+  <img className="brand-crest" src={site.logoImage||"/images/married-nepal-logo.webp"} alt="Married Nepal official circular logo" />
+  <span className="brand-words"><strong>Married <span>Nepal</span></strong><small>PRIVATE LIMITED · EST. IN NEPAL</small></span>
  </span>;
 }
 export function Header(){
