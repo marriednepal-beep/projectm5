@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Married Nepal emblem">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f3cf85"/><stop offset="1" stop-color="#c49a45"/></linearGradient></defs>
+<circle cx="128" cy="128" r="123" fill="#701e34"/><circle cx="128" cy="128" r="112" fill="none" stroke="url(#g)" stroke-width="2.5"/>
+<path d="M128 113 C109 94 111 76 128 59 C145 76 147 94 128 113Z" fill="none" stroke="url(#g)" stroke-width="4" stroke-linejoin="round"/>
+<path d="M126 119 C103 109 86 95 87 78 C111 80 128 99 126 119Z M130 119 C153 109 170 95 169 78 C145 80 128 99 130 119Z" fill="none" stroke="url(#g)" stroke-width="4" stroke-linejoin="round"/>
+<path d="M120 127 C93 127 77 117 69 99 C93 98 110 108 120 127Z M136 127 C163 127 179 117 187 99 C163 98 146 108 136 127Z" fill="none" stroke="url(#g)" stroke-width="4" stroke-linejoin="round"/>
+<path d="M82 136 Q128 150 174 136" fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
+<text x="128" y="191" font-family="Georgia,serif" font-size="43" font-weight="bold" text-anchor="middle" fill="#fffaf1" letter-spacing="-2">MN</text>
+<path d="M92 208 H164" stroke="url(#g)" stroke-width="2" stroke-linecap="round"/>
+</svg>

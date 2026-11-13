@@ -1,0 +1,147 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn(){ return request.auth != null; }
+  function anonymous(){ return signedIn() && request.auth.token.firebase.sign_in_provider == 'anonymous'; }
+  function owner(uid){ return signedIn() && request.auth.uid == uid; }
+  function admin(){ return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+  function smallPhoto(data){
+   return data is string && data.size() < 175000 && data.matches('^data:image/jpeg;base64,.*$');
+  }
+  function validSubmittedImage(entry){
+   return entry is map && entry.keys().hasOnly(['imageData','reviewStatus']) &&
+    entry.keys().hasAll(['imageData','reviewStatus']) && entry.reviewStatus == 'pending' && smallPhoto(entry.imageData);
+  }
+  function validSubmittedPhotos(){
+   return request.resource.data.keys().hasOnly(['ownerUid','images','updatedAt']) &&
+    request.resource.data.ownerUid == request.auth.uid &&
+    request.resource.data.images is list && request.resource.data.images.size() >= 1 &&
+    request.resource.data.images.size() <= 3 &&
+    validSubmittedImage(request.resource.data.images[0]) &&
+    (request.resource.data.images.size()<2 || validSubmittedImage(request.resource.data.images[1])) &&
+    (request.resource.data.images.size()<3 || validSubmittedImage(request.resource.data.images[2]));
+  }
+  function approvedImage(uid,img){
+   let p=get(/databases/$(database)/documents/profilePhotos/$(uid)).data.images;
+   return (p.size()>0 && p[0].reviewStatus=='approved' && p[0].imageData==img) ||
+    (p.size()>1 && p[1].reviewStatus=='approved' && p[1].imageData==img) ||
+    (p.size()>2 && p[2].reviewStatus=='approved' && p[2].imageData==img);
+  }
+  function canPublish(uid){
+   return getAfter(/databases/$(database)/documents/profiles/$(uid)).data.status == 'approved' &&
+    getAfter(/databases/$(database)/documents/profiles/$(uid)).data.visibility == 'public' &&
+    get(/databases/$(database)/documents/publicationConsents/$(uid)).data.consent == true;
+  }
+  function validPublicCard(uid){
+   return request.resource.data.keys().hasOnly(['name','photo']) &&
+    request.resource.data.keys().hasAll(['name','photo']) &&
+    request.resource.data.name is string && request.resource.data.name.size()>0 && request.resource.data.name.size()<161 &&
+    request.resource.data.name==get(/databases/$(database)/documents/members/$(uid)).data.fullName &&
+    smallPhoto(request.resource.data.photo) && approvedImage(uid,request.resource.data.photo) && canPublish(uid);
+  }
+  match /admins/{uid} {
+   allow get,list: if admin();
+   allow create,update,delete: if false; // Bootstrap through Firebase Console or trusted tooling only.
+  }
+  match /members/{uid} {
+   allow get,list: if admin();
+   allow create: if anonymous() && owner(uid) && request.resource.data.uid == uid &&
+    request.resource.data.email is string && request.resource.data.email.size()>=5 && request.resource.data.email.size()<=160 &&
+    request.resource.data.keys().hasOnly(['uid','email','fullName','phone','dateOfBirth','city','country','language','createdAt']) &&
+    request.resource.data.fullName is string && request.resource.data.fullName.size()>0 && request.resource.data.fullName.size()<161;
+   allow update: if admin();
+   allow delete: if admin();
+  }
+  match /profiles/{uid} {
+   allow get,list: if admin(); // PRIVATE. No browser user can query others' profiles.
+   allow create: if anonymous() && owner(uid) && request.resource.data.ownerUid==uid &&
+    request.resource.data.status=='pending' && request.resource.data.visibility=='hidden' &&
+    request.resource.data.age is int && request.resource.data.age>=20 && request.resource.data.age<=100 &&
+    request.resource.data.partnerAgeMin is int && request.resource.data.partnerAgeMin>=20 &&
+    request.resource.data.partnerAgeMax is int && request.resource.data.partnerAgeMax<=100 &&
+    request.resource.data.partnerAgeMax>=request.resource.data.partnerAgeMin &&
+    request.resource.data.keys().hasOnly(['ownerUid','code','status','visibility','gender','age','district','education','occupation','maritalStatus','about','height','partnerAgeMin','partnerAgeMax','createdAt','updatedAt']);
+   allow update: if admin();
+   allow delete: if admin();
+  }
+  match /applications/{uid} {
+   allow get,list: if admin(); // ALL contact, family, work and preferences private.
+   allow create: if anonymous() && owner(uid) && request.resource.data.uid==uid &&
+    request.resource.data.email is string && request.resource.data.email.size()>=5 && request.resource.data.email.size()<=160 &&
+    request.resource.data.fullName is string && request.resource.data.fullName.size()<=160 &&
+    request.resource.data.phone is string && request.resource.data.phone.size()<=40 &&
+    request.resource.data.partnerAgeMin is int && request.resource.data.partnerAgeMin>=20 &&
+    request.resource.data.partnerAgeMax is int && request.resource.data.partnerAgeMax<=100 &&
+    request.resource.data.feeStatus in ['unpaid','submitted'] &&
+    request.resource.data.keys().hasOnly(['uid','fullName','gender','maritalStatus','religion','community','motherTongue','education','occupation','workDetails','monthlyIncome','permanentAddress','temporaryAddress','familyDetails','district','city','country','partnerPreferences','partnerAgeMin','partnerAgeMax','preferredEducation','preferredLocation','email','phone','whatsappNumber','guardianContact','paymentMethod','paymentReference','consentWhatsapp','feeDue','feeStatus','createdAt','updatedAt']);
+   allow update,delete: if admin();
+  }
+  match /profilePhotos/{uid} {
+   allow get,list: if admin(); // ALL originals private, even approved photos.
+   allow create: if anonymous() && owner(uid) && validSubmittedPhotos();
+   allow update: if admin();
+   allow delete: if admin();
+  }
+  match /paymentProofs/{uid} {
+   allow get,list: if admin(); // Vouchers never exposed publicly.
+   allow create: if anonymous() && owner(uid) && request.resource.data.ownerUid==uid &&
+    request.resource.data.keys().hasOnly(['ownerUid','imageData','method','reference','createdAt']) &&
+    smallPhoto(request.resource.data.imageData) &&
+    request.resource.data.method in ['esewa','khalti','bank'] &&
+    request.resource.data.reference is string && request.resource.data.reference.size()<130;
+   allow delete: if admin();
+  }
+  match /publicationConsents/{uid} {
+   allow get,list: if admin();
+   allow create: if anonymous() && owner(uid) && request.resource.data.ownerUid==uid && request.resource.data.consent is bool &&
+    request.resource.data.keys().hasOnly(['ownerUid','consent','updatedAt']);
+   allow update: if admin();
+   allow delete: if admin();
+  }
+  // An exclusively public document. NO gender, age, location, profile ID, contact or other metadata fields.
+  match /publicProfiles/{uid} {
+   allow get,list: if true;
+   allow create,update: if admin() && validPublicCard(uid);
+   allow delete: if admin(); // Applicants request withdrawal from the office. Anonymous sessions cannot change publication.
+  }
+  match /matchmakingInquiries/{id} {
+   allow get,list: if admin();
+   allow create: if anonymous() && request.resource.data.keys().hasOnly(['name','phone','email','preference','targetUid','consent','status','createdAt']) &&
+    request.resource.data.keys().hasAll(['name','phone','email','preference','targetUid','consent','status','createdAt']) &&
+    request.resource.data.name is string && request.resource.data.name.size()>=2 && request.resource.data.name.size()<=160 &&
+    request.resource.data.phone is string && request.resource.data.phone.size()>=7 && request.resource.data.phone.size()<=40 &&
+    request.resource.data.email is string && request.resource.data.email.size()<=150 &&
+    request.resource.data.preference is string && request.resource.data.preference.size()>=15 && request.resource.data.preference.size()<=3000 &&
+    request.resource.data.targetUid is string && request.resource.data.targetUid.size()<=128 &&
+    request.resource.data.consent==true && request.resource.data.status=='new' &&
+    request.resource.data.createdAt==request.time;
+   allow update,delete: if admin();
+  }
+  match /changeRequests/{id} {
+   allow get,list: if admin();
+   allow create: if false && signedIn() && request.resource.data.ownerUid==request.auth.uid &&
+    request.resource.data.status=='pending' && request.resource.data.message is string &&
+    request.resource.data.message.size()>=10 && request.resource.data.message.size()<1500 &&
+    request.resource.data.keys().hasOnly(['ownerUid','message','status','createdAt']) && request.resource.data.createdAt==request.time;
+   allow update,delete: if admin();
+  }
+  match /adminAudit/{id} {
+   allow get,list: if admin();
+   allow create: if admin() && request.resource.data.actorUid==request.auth.uid && request.resource.data.action is string && request.resource.data.createdAt==request.time;
+   allow update,delete: if false;
+  }
+  match /siteAssets/{id} {
+   allow read: if id in ['logoImage','faviconImage','heroImage','aboutImage','registrationImage','contactImage','paymentQrImage','esewaQrImage','khaltiQrImage','bankQrImage'];
+   allow create,update: if admin() &&
+    id in ['logoImage','faviconImage','heroImage','aboutImage','registrationImage','contactImage','paymentQrImage','esewaQrImage','khaltiQrImage','bankQrImage'] &&
+    request.resource.data.keys().hasOnly(['imageData','updatedAt']) &&
+    request.resource.data.imageData is string && request.resource.data.imageData.size()<240000;
+   allow delete: if admin();
+  }
+  match /settings/{id} {
+   allow read: if id=='appearance'||admin();
+   allow create,update,delete: if admin();
+  }
+  match /{document=**} {allow read,write: if false;}
+ }
+}
