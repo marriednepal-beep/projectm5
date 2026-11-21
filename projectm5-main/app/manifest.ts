@@ -1,0 +1,2 @@
+import type {MetadataRoute} from "next";
+export default function manifest():MetadataRoute.Manifest{return {name:"Married Nepal Private Limited",short_name:"Married Nepal",description:"Nepali Matrimonial & Life Partner Search",start_url:"/",display:"standalone",background_color:"#fff9ef",theme_color:"#701e34",icons:[{src:"/icon-256.png",sizes:"256x256",type:"image/png"},{src:"/icon-64.png",sizes:"64x64",type:"image/png"}]};}

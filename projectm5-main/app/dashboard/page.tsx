@@ -1,0 +1,3 @@
+import Link from "next/link";import type {Metadata} from "next";
+export const metadata:Metadata={title:"Registration Help",robots:{index:false,follow:false}};
+export default function Dashboard(){return <section className="section"><div className="container narrow"><div className="empty-state"><h1>Registration is managed by our office</h1><p>Applicants do not need an account or password. To correct your details, withdraw photo consent or check status, contact Married Nepal with your application reference.</p><Link className="btn btn-maroon" href="/contact">Contact our team</Link></div></div></section>}

@@ -1,36 +1,24 @@
 "use client";
-import { getApps, initializeApp, type FirebaseApp } from "firebase/app";
+import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
-/**
- * Pin this deployment to the existing Married Nepal Firebase project.
- * Do not allow stale Vercel NEXT_PUBLIC_* overrides to silently point this
- * custom domain at another Firebase project/API key.
- */
 const config = {
-  apiKey: "AIzaSyB-P6GWyT-JU6UAKkRAazzVoIzcfNs91_g",
-  authDomain: "marriednepal-282f5.firebaseapp.com",
-  projectId: "marriednepal-282f5",
-  storageBucket: "marriednepal-282f5.firebasestorage.app",
-  messagingSenderId: "629216705507",
-  appId: "1:629216705507:web:103dd25c806dd44ff6fed6",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyB-P6GWyT-JU6UAKkRAazzVoIzcfNs91_g",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "marriednepal-282f5.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "marriednepal-282f5",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:629216705507:web:103dd25c806dd44ff6fed6",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "629216705507"
 };
-
-export const isConfigured = true;
-const APP_NAME = "married-nepal-production";
+export const isConfigured = !!(config.apiKey && config.authDomain && config.projectId && config.appId);
 let firebaseApp: FirebaseApp | null = null;
 export let auth: Auth | null = null;
 export let db: Firestore | null = null;
-
-if (typeof window !== "undefined") {
-  firebaseApp =
-    getApps().find((app) => app.name === APP_NAME) ??
-    initializeApp(config, APP_NAME);
+if (isConfigured && typeof window !== "undefined") {
+  firebaseApp = getApps().length ? getApp() : initializeApp(config);
   auth = getAuth(firebaseApp);
   db = getFirestore(firebaseApp);
 }
-
 export function requireDb(): Firestore {
   if (!db) throw new Error("Online registration is temporarily unavailable. Please contact our office.");
   return db;
